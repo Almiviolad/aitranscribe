@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ai transcribe</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+
+    <style>
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @-webkit-keyframes rotate {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+            to {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        .load {
+            width: 100px;
+            height: 100px;
+            margin: 110px auto 0;
+            border: solid 10px red;
+            border-radius: 50%;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+            -webkit-transition: all 0.5s ease-in;
+            -webkit-animation-name: rotate;
+            -webkit-animation-duration: 1.0s;
+            -webkit-animation-iteration-count: infinite;
+            -webkit-animation-timing-function: linear;
+
+            transition: all 0.5s ease-in;
+            animation-name: rotate;
+            animation-duration: 1.0s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen bg-gray-100 font-sans antialised">
+    <!-- Navbar -->
+    <nav class="bg-red-600 p-4 text-white flex justify-between">
+        <a href="/">
+            <div>
+                <h1 class="text-3xl font-bold">AI Transcribe</h1>
+            </div>
+        </a>
+        <div>
+            <a href="transcripts" class="text-white hover:underline">My transcripts</a>
+            <a href="#" class="text-white hover:underline">Welcome {{ user.username }} </a>
+            <a href="logout" class="text-white hover:underline">logout</a>
+        </div>
+    </nav>
+    <br>
+
+    <!-- main -->
+     <div flex-grow-container mx-auto mt-10 px-4 sm:px-0>
+        <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105 flex flex-col ">
+            <!-- Introduction section -->
+            <div class="text-center">
+                <h2 class="text-2xl font-semibold mb-4"> Welcome to AI transcribe</h2>
+                <p class="text-gray-700">Generate high quality transcription from Youtube videos using AI. Type in the video url to continue</p>
+            </div>
+            <br>
+
+            <!-- Yourube url sectiom -->
+             <div>
+                <h2 class="text-xl mb-4 font-semibold">Type in Youtube link</h2>
+                <div class="flex space-x-4">
+                    <input id="yt_link" type="url" placeholder="Paste youtube link" class="flex-grow p-2 border-blue-400 rounded-l-md">
+                    <button id="generate_btn" class="bg-red-600 text-white px-2 py-2 rounded-r-md hover:bg-red-700 transition-colors">Generate</button>
+                </div>
+             </div>
+
+             <!-- secton for loading circle -->
+              <div style="display: none;" id="loading_circle" class="load">
+
+              </div>
+
+             <!-- Generated Trascription section -->
+              <section class="mt-10 flex-grow>
+                <h2 class="text-xl mb-4 font-semibold">Generated transcription</h2>
+                <div id="transcript" class="mt-2, text-gray-700 space-y-4">           
+                </div>
+              </section>
+        </div>
+     </div>
+
+
+     <footer class="text-center p-4 text-black mt-6">
+        Powered by  <a href="https://www.almiviolad.com">Almiviolad</a>
+     </footer>
+
+     <script>
+        document.getElementById('generate_btn').addEventListener('click', async () => {
+            const youtubeLink = document.getElementById('yt_link').value;
+            const transcript = document.getElementById('transcript');
+
+            if (youtubeLink) {
+                document.getElementById('loading_circle').style.display = 'block';
+                transcript.innerHTML = ''; 
+
+                const endpointUrl = '/generate-blog';
+                console.log(youtubeLink)
+
+                try {
+                    const response = await fetch(endpointUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({'link': youtubeLink})
+                    });
+                    const data = await response.json();
+                    transcript.innerHTML = data.content;
+                } catch (error) {
+                    console.error("Error occured:", error);
+                    alert("something went wrong, please try again later.");
+                }
+                document.getElementById('loading_circle').style.display = 'none'
+            } else {
+                alert("please enter a youtube link")
+            }
+        });
+     </script>
+</body>
+</html>
