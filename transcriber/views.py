@@ -49,7 +49,7 @@ def get_transcription(link):
 def generate_transcript(transcript_text):
     import requests
     API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2"
-    headers = {}  # No Authorization header needed
+    headers = {"Authorization": f"Bearer {settings.HUGGINGFACE_API_KEY}"}  # Add your API key in settings
 
     prompt = (
         "Turn the following transcript into a clear, professional tutorial. "
@@ -133,7 +133,7 @@ def user_login(request):
             return redirect('/')
         else:
             error_message = "Invalid username or password"
-            return render(request, login.html, {'error_message': error_message})
+            return render(request, 'login.html', {'error_message': error_message})
     return render(request, 'login.html')
 
 def user_signup(request):
