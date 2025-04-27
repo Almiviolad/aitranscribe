@@ -28,9 +28,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['aitranscribe-production.up.railway.app']
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://aitranscribe-production.up.railway.app",
-]
 
 
 # Application definition
